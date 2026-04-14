@@ -2,11 +2,17 @@
 
 import type React from 'react';
 import { useRef, useMemo, useCallback, useState, useEffect, Suspense } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useTexture } from '@react-three/drei';
+import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-type ImageItem = string | { src: string; alt?: string };
+type MediaItem = string | { src: string; alt?: string };
+
+// Helper to determine if a URL is a video
+const isVideoUrl = (url: string): boolean => {
+	const videoExtensions = ['.mp4', '.webm', '.mov', '.ogg', '.avi', '.mkv'];
+	const lowercaseUrl = url.toLowerCase();
+	return videoExtensions.some((ext) => lowercaseUrl.includes(ext));
+};
 
 interface FadeSettings {
 	/** Fade in range as percentage of depth range (0-1) */
@@ -37,7 +43,7 @@ interface BlurSettings {
 }
 
 interface InfiniteGalleryProps {
-	images: ImageItem[];
+	images: MediaItem[];
 	/** Speed multiplier applied to scroll delta (default: 1) */
 	speed?: number;
 	/** Spacing between images along Z in world units (default: 2.5) */
@@ -67,6 +73,143 @@ interface PlaneData {
 const DEFAULT_DEPTH_RANGE = 50;
 const MAX_HORIZONTAL_OFFSET = 8;
 const MAX_VERTICAL_OFFSET = 8;
+
+// Hook to create video texture
+function useVideoTexture(src: string): THREE.VideoTexture | null {
+	const [texture, setTexture] = useState<THREE.VideoTexture | null>(null);
+	const videoRef = useRef<HTMLVideoElement | null>(null);
+
+	useEffect(() => {
+		const video = document.createElement('video');
+		video.src = src;
+		video.crossOrigin = 'anonymous';
+		video.loop = true;
+		video.muted = true;
+		video.playsInline = true;
+		video.autoplay = true;
+		videoRef.current = video;
+
+		const handleCanPlay = () => {
+			const videoTexture = new THREE.VideoTexture(video);
+			videoTexture.minFilter = THREE.LinearFilter;
+			videoTexture.magFilter = THREE.LinearFilter;
+			videoTexture.format = THREE.RGBAFormat;
+			videoTexture.colorSpace = THREE.SRGBColorSpace;
+			setTexture(videoTexture);
+			video.play().catch(() => {
+				// Autoplay may be blocked, that's okay
+			});
+		};
+
+		video.addEventListener('canplay', handleCanPlay);
+
+		// Start loading
+		video.load();
+
+		return () => {
+			video.removeEventListener('canplay', handleCanPlay);
+			video.pause();
+			video.src = '';
+			videoRef.current = null;
+			if (texture) {
+				texture.dispose();
+			}
+		};
+	}, [src]);
+
+	// Keep video playing
+	useFrame(() => {
+		if (texture && videoRef.current) {
+			texture.needsUpdate = true;
+		}
+	});
+
+	return texture;
+}
+
+// Hook to load media (image or video)
+function useMediaTextures(
+	sources: { src: string; isVideo: boolean }[]
+): (THREE.Texture | null)[] {
+	const [textures, setTextures] = useState<(THREE.Texture | null)[]>(
+		() => sources.map(() => null)
+	);
+	const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+	const textureRefs = useRef<(THREE.Texture | null)[]>([]);
+
+	useEffect(() => {
+		const newTextures: (THREE.Texture | null)[] = sources.map(() => null);
+		const videos: (HTMLVideoElement | null)[] = [];
+
+		sources.forEach((source, index) => {
+			if (source.isVideo) {
+				const video = document.createElement('video');
+				video.src = source.src;
+				video.crossOrigin = 'anonymous';
+				video.loop = true;
+				video.muted = true;
+				video.playsInline = true;
+				video.autoplay = true;
+				videos[index] = video;
+
+				const handleCanPlay = () => {
+					const videoTexture = new THREE.VideoTexture(video);
+					videoTexture.minFilter = THREE.LinearFilter;
+					videoTexture.magFilter = THREE.LinearFilter;
+					videoTexture.format = THREE.RGBAFormat;
+					videoTexture.colorSpace = THREE.SRGBColorSpace;
+					newTextures[index] = videoTexture;
+					textureRefs.current[index] = videoTexture;
+					setTextures([...newTextures]);
+					video.play().catch(() => {});
+				};
+
+				video.addEventListener('canplay', handleCanPlay);
+				video.load();
+			} else {
+				const loader = new THREE.TextureLoader();
+				loader.load(
+					source.src,
+					(tex) => {
+						tex.colorSpace = THREE.SRGBColorSpace;
+						newTextures[index] = tex;
+						textureRefs.current[index] = tex;
+						setTextures([...newTextures]);
+					},
+					undefined,
+					(error) => {
+						console.error(`Failed to load texture: ${source.src}`, error);
+					}
+				);
+			}
+		});
+
+		videoRefs.current = videos;
+
+		return () => {
+			videos.forEach((video) => {
+				if (video) {
+					video.pause();
+					video.src = '';
+				}
+			});
+			textureRefs.current.forEach((tex) => {
+				if (tex) tex.dispose();
+			});
+		};
+	}, [JSON.stringify(sources.map((s) => s.src))]);
+
+	// Update video textures each frame
+	useFrame(() => {
+		textureRefs.current.forEach((tex, i) => {
+			if (tex && sources[i]?.isVideo) {
+				tex.needsUpdate = true;
+			}
+		});
+	});
+
+	return textures;
+}
 
 // Custom shader material for blur, opacity, and cloth folding effects
 const createClothMaterial = () => {
@@ -222,17 +365,21 @@ function GalleryScene({
 	const [autoPlay, setAutoPlay] = useState(true);
 	const lastInteraction = useRef(Date.now());
 
-	// Normalize images to objects
-	const normalizedImages = useMemo(
+	// Normalize images to objects and detect video types
+	const normalizedMedia = useMemo(
 		() =>
-			images.map((img) =>
-				typeof img === 'string' ? { src: img, alt: '' } : img
-			),
+			images.map((img) => {
+				const src = typeof img === 'string' ? img : img.src;
+				const alt = typeof img === 'string' ? '' : img.alt || '';
+				return { src, alt, isVideo: isVideoUrl(src) };
+			}),
 		[images]
 	);
 
-	// Load textures
-	const textures = useTexture(normalizedImages.map((img) => img.src));
+	// Load textures (images and videos)
+	const textures = useMediaTextures(
+		normalizedMedia.map((m) => ({ src: m.src, isVideo: m.isVideo }))
+	);
 
 	// Create materials pool
 	const materials = useMemo(
@@ -265,7 +412,7 @@ function GalleryScene({
 		return positions;
 	}, [visibleCount]);
 
-	const totalImages = normalizedImages.length;
+	const totalImages = normalizedMedia.length;
 	const depthRange = DEFAULT_DEPTH_RANGE;
 
 	// Initialize plane data
@@ -469,7 +616,7 @@ function GalleryScene({
 		});
 	});
 
-	if (normalizedImages.length === 0) return null;
+	if (normalizedMedia.length === 0) return null;
 
 	return (
 		<>
@@ -481,10 +628,14 @@ function GalleryScene({
 
 				const worldZ = plane.z - depthRange / 2;
 
-				// Calculate scale to maintain aspect ratio
-				const aspect = texture.image
-					? texture.image.width / texture.image.height
-					: 1;
+				// Calculate scale to maintain aspect ratio (handle both images and videos)
+				let aspect = 1;
+				if (texture.image) {
+					// For videos, use videoWidth/videoHeight; for images use width/height
+					const width = texture.image.videoWidth || texture.image.width || 1;
+					const height = texture.image.videoHeight || texture.image.height || 1;
+					aspect = width / height;
+				}
 				const scale: [number, number, number] =
 					aspect > 1 ? [2 * aspect, 2, 1] : [2, 2 / aspect, 1];
 
@@ -503,29 +654,43 @@ function GalleryScene({
 }
 
 // Fallback component for when WebGL is not available
-function FallbackGallery({ images }: { images: ImageItem[] }) {
-	const normalizedImages = useMemo(
+function FallbackGallery({ images }: { images: MediaItem[] }) {
+	const normalizedMedia = useMemo(
 		() =>
-			images.map((img) =>
-				typeof img === 'string' ? { src: img, alt: '' } : img
-			),
+			images.map((img) => {
+				const src = typeof img === 'string' ? img : img.src;
+				const alt = typeof img === 'string' ? '' : img.alt || '';
+				return { src, alt, isVideo: isVideoUrl(src) };
+			}),
 		[images]
 	);
 
 	return (
 		<div className="flex flex-col items-center justify-center h-full bg-gray-100 p-4">
 			<p className="text-gray-600 mb-4">
-				WebGL not supported. Showing image list:
+				WebGL not supported. Showing media list:
 			</p>
 			<div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
-				{normalizedImages.map((img, i) => (
-					<img
-						key={i}
-						src={img.src || '/placeholder.svg'}
-						alt={img.alt}
-						className="w-full h-32 object-cover rounded"
-					/>
-				))}
+				{normalizedMedia.map((media, i) =>
+					media.isVideo ? (
+						<video
+							key={i}
+							src={media.src}
+							className="w-full h-32 object-cover rounded"
+							muted
+							loop
+							autoPlay
+							playsInline
+						/>
+					) : (
+						<img
+							key={i}
+							src={media.src || '/placeholder.svg'}
+							alt={media.alt}
+							className="w-full h-32 object-cover rounded"
+						/>
+					)
+				)}
 			</div>
 		</div>
 	);
