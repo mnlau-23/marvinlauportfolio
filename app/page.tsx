@@ -14,11 +14,11 @@ const InfiniteGallery = dynamic(() => import('@/components/InfiniteGallery'), {
 export default function Home() {
 	const sampleImages = [
 		{ src: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1-w2tftoVl3cV3Z5Qubu2qeaYYKi4pwj.webp', alt: 'Image 1' },
-		{ src: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2-uj2Fvq3DpWH7LtGcK6WkaU7H6WX4S8.webp', alt: 'Image 2' },
-		{ src: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/3-kw7Z8s0ETYOQu5g63w1zqTefT6d5Vf.webp', alt: 'Image 3' },
-		{ src: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/4-1kiiVmgKLgNoQjPdgIMvN1pDPxeoOj.webp', alt: 'Image 4' },
-		{ src: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/5-uCoetbft1EzlxjzDBY7AVgb2Mk6y4g.webp', alt: 'Image 5' },
-		{ src: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/6-eLf5PHoVywNElQQaGvdrRFnxKMnc1f.webp', alt: 'Image 6' },
+		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/backup%20winning%20creative.mp4', alt: 'Image 2' },
+		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/savee.mov', alt: 'Image 3' },
+		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Screenshot%202026-04-14%20at%204.44.25%20PM.png', alt: 'Image 4' },
+		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/winning%20create.mp4', alt: 'Image 5' },
+		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/winning%20creative%202.mp4', alt: 'Image 6' },
 		{ src: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/7-Hfd0omnFSE1FXfLaK7Znv838dQWNke.webp', alt: 'Image 7' },
 		{ src: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/8-qqbYhuiLntJrbWVXp2KVRuyfQCdJ78.webp', alt: 'Image 8' },
 	];
