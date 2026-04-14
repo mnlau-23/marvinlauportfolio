@@ -1,4 +1,13 @@
-import InfiniteGallery from '@/components/InfiniteGallery';
+import dynamic from 'next/dynamic';
+
+const InfiniteGallery = dynamic(() => import('@/components/InfiniteGallery'), {
+	ssr: false,
+	loading: () => (
+		<div className="h-screen w-full flex items-center justify-center bg-black">
+			<div className="animate-pulse text-white/50">Loading gallery...</div>
+		</div>
+	),
+});
 
 export default function Home() {
 	const sampleImages = [
