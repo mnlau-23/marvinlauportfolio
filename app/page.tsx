@@ -13,8 +13,8 @@ const InfiniteGallery = dynamic(() => import('@/components/InfiniteGallery'), {
 
 export default function Home() {
 	const sampleImages = [
-		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Copy%20of%20Copy%20of%20DONT%20LET%20A%20FLAT%20TIRE%20STOP%20YOU%20(Banner%20(Landscape)).png', alt: 'Image 1' },
-		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/rahh.mp4', alt: 'Image 2' },
+		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/rahh.mp4', alt: 'Image 1' },
+		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Screenshot%202026-04-14%20at%207.33.25%20PM.png', alt: 'Image 2' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/savee.mov', alt: 'Image 3' },
 		{ src: 'hhttps://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Screenshot%202026-04-14%20at%207.33.25%20PM.png', alt: 'Image 4' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/newestt.mp4', alt: 'Image 5' },
