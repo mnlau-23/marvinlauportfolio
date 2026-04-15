@@ -161,7 +161,7 @@ function useMediaTextures(
 					newTextures[index] = videoTexture;
 					textureRefs.current[index] = videoTexture;
 					setTextures([...newTextures]);
-					video.play().catch(() => {});
+					video.play().catch(() => { });
 				};
 
 				video.addEventListener('canplay', handleCanPlay);
@@ -698,6 +698,10 @@ function FallbackGallery({ images }: { images: MediaItem[] }) {
 
 export default function InfiniteGallery({
 	images,
+	speed,
+	zSpacing,
+	visibleCount,
+	falloff,
 	className = 'h-96 w-full',
 	style,
 	fadeSettings = {
@@ -743,6 +747,8 @@ export default function InfiniteGallery({
 				<Suspense fallback={null}>
 					<GalleryScene
 						images={images}
+						speed={speed}
+						visibleCount={visibleCount}
 						fadeSettings={fadeSettings}
 						blurSettings={blurSettings}
 					/>
