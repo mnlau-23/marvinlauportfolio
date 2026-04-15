@@ -508,6 +508,8 @@ function GalleryScene({
 		});
 
 		// Update plane positions
+		const imageAdvance =
+			totalImages > 0 ? visibleCount % totalImages || totalImages : 0;
 		const totalRange = depthRange;
 		const halfRange = totalRange / 2;
 
@@ -524,20 +526,14 @@ function GalleryScene({
 				newZ += totalRange * wrapsBackward;
 			}
 
-			if (totalImages > 0) {
-				if (wrapsForward > 0) {
-					// Find the highest imageIndex currently in use and go one beyond
-					const usedIndices = planesData.current.map((p) => p.imageIndex);
-					const maxIndex = Math.max(...usedIndices);
-					plane.imageIndex = (maxIndex + 1) % totalImages;
-				}
+			if (wrapsForward > 0 && imageAdvance > 0 && totalImages > 0) {
+				plane.imageIndex =
+					(plane.imageIndex + wrapsForward * imageAdvance) % totalImages;
+			}
 
-				if (wrapsBackward > 0) {
-					// Find the lowest imageIndex currently in use and go one before
-					const usedIndices = planesData.current.map((p) => p.imageIndex);
-					const minIndex = Math.min(...usedIndices);
-					plane.imageIndex = ((minIndex - 1) % totalImages + totalImages) % totalImages;
-				}
+			if (wrapsBackward > 0 && imageAdvance > 0 && totalImages > 0) {
+				const step = plane.imageIndex - wrapsBackward * imageAdvance;
+				plane.imageIndex = ((step % totalImages) + totalImages) % totalImages;
 			}
 
 			plane.z = ((newZ % totalRange) + totalRange) % totalRange;
