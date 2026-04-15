@@ -32,7 +32,7 @@ export default function Home() {
 				images={sampleImages}
 				speed={1.2}
 				zSpacing={3}
-				visibleCount={11}
+				visibleCount={12}
 				falloff={{ near: 0.8, far: 14 }}
 				className="h-screen w-full rounded-lg overflow-hidden"
 			/>
