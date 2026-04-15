@@ -16,10 +16,10 @@ export default function Home() {
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Copy%20of%20Copy%20of%20DONT%20LET%20A%20FLAT%20TIRE%20STOP%20YOU%20(Banner%20(Landscape)).png', alt: 'Image 1' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/rugss.mp4', alt: 'Image 2' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/savee.mov', alt: 'Image 3' },
-		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Screenshot%202026-04-14%20at%204.44.25%20PM.png', alt: 'Image 4' },
+		{ src: 'hhttps://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Screenshot%202026-04-14%20at%207.33.25%20PM.png', alt: 'Image 4' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/winning%20create.mp4', alt: 'Image 5' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/winning%20creative%202.mp4', alt: 'Image 6' },
-		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Screenshot%202026-04-14%20at%205.26.00%20PM.png', alt: 'Image 7' },
+		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Adobe%20Express%20-%20file.png', alt: 'Image 7' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Rembrandt%20Harmenszoon%20van%20Rijn.png', alt: 'Image 8' },
 	];
 
