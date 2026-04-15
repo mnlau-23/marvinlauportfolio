@@ -24,6 +24,7 @@ export default function Home() {
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/winning%20creative%202.mp4', alt: 'Image 9' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/pgn%201.png', alt: 'Image 10' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/pgn%202.png', alt: 'Image 11' },
+		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/TELL%20US%20YOUR%20(2).png', alt: 'Image 12' },
 	];
 
 	return (
