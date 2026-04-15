@@ -16,7 +16,7 @@ export default function Home() {
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/rahh.mp4', alt: 'Image 1' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Screenshot%202026-04-14%20at%207.33.25%20PM.png', alt: 'Image 2' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/savee.mov', alt: 'Image 3' },
-		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Screenshot%202026-04-14%20at%207.33.25%20PM.png', alt: 'Image 4' },
+		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Screenshot%202026-04-14%20at%205.24.51%20PM.png', alt: 'Image 4' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/newestt.mp4', alt: 'Image 5' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/edited.mp4', alt: 'Image 6' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/Screenshot%202026-04-14%20at%208.53.18%20PM.png', alt: 'Image 7' },
@@ -24,6 +24,7 @@ export default function Home() {
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/winning%20creative%202.mp4', alt: 'Image 9' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/pgn%201.png', alt: 'Image 10' },
 		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/pgn%202.png', alt: 'Image 11' },
+		{ src: 'https://bpousoyupeexbowfgtbp.supabase.co/storage/v1/object/public/Marketing/dresses.mov, alt: 'Image 12' },
 	];
 
 	return (
