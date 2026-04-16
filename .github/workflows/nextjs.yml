@@ -38,8 +38,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build with Next.js
-        run: pnpm next build
+      - name: Build with Next.js (with retries)
+        run: |
+          for attempt in 1 2 3; do
+            echo "Build attempt ${attempt}/3"
+            if pnpm next build; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Build failed. Retrying in 15 seconds..."
+              sleep 15
+            fi
+          done
+          echo "Build failed after 3 attempts."
+          exit 1
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
